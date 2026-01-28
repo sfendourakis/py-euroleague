@@ -12,7 +12,6 @@ Reference: https://medium.com/@dogacandu/how-i-analyze-fantasy-euroleague-basket
 """
 
 from euroleague import EuroleagueClient
-from euroleague.exceptions import APIError
 
 
 def get_all_statistical_leaders(client: EuroleagueClient, season_code: str) -> dict:
@@ -21,7 +20,7 @@ def get_all_statistical_leaders(client: EuroleagueClient, season_code: str) -> d
         competition_code="E",
         season_mode="Single",
         season_code=season_code,
-        limit=50  # Get more players for better analysis
+        limit=50,  # Get more players for better analysis
     )
 
 
@@ -56,11 +55,13 @@ def display_top_fantasy_performers(leaders: dict, category: str = "pir", top_n: 
         else:
             avg_str = f"{avg:.1f}"
 
-        print(f"{player.get('rank'):<6}"
-              f"{details.get('name', 'N/A'):<30}"
-              f"{team_name:<20}"
-              f"{avg_str:>10}"
-              f"{gp:>8}")
+        print(
+            f"{player.get('rank'):<6}"
+            f"{details.get('name', 'N/A'):<30}"
+            f"{team_name:<20}"
+            f"{avg_str:>10}"
+            f"{gp:>8}"
+        )
 
 
 def find_value_picks(leaders: dict, min_games: int = 15) -> list:
@@ -93,11 +94,13 @@ def display_value_picks(value_picks: list):
         team = details.get("team", {})
         team_name = team.get("name", "N/A").split(";")[0][:18]
 
-        print(f"{player.get('rank'):<6}"
-              f"{details.get('name', 'N/A'):<30}"
-              f"{team_name:<20}"
-              f"{player.get('average', 0):>10.1f}"
-              f"{player.get('gamesPlayed', 0):>8}")
+        print(
+            f"{player.get('rank'):<6}"
+            f"{details.get('name', 'N/A'):<30}"
+            f"{team_name:<20}"
+            f"{player.get('average', 0):>10.1f}"
+            f"{player.get('gamesPlayed', 0):>8}"
+        )
 
 
 def analyze_category_specialists(leaders: dict):
@@ -122,7 +125,7 @@ def analyze_category_specialists(leaders: dict):
             for p in players:
                 details = p.get("details", {})
                 avg = p.get("average", p.get("value", "N/A"))
-                if isinstance(avg, (int, float)):
+                if isinstance(avg, int | float):
                     print(f"  {p.get('rank')}. {details.get('name', 'N/A')}: {avg:.1f}")
                 else:
                     print(f"  {p.get('rank')}. {details.get('name', 'N/A')}: {avg}")
@@ -135,12 +138,7 @@ def build_fantasy_roster(leaders: dict) -> dict:
     """
     pir_players = leaders.get("pir", [])
 
-    roster = {
-        "guards": [],
-        "forwards": [],
-        "centers": [],
-        "flex": []
-    }
+    roster = {"guards": [], "forwards": [], "centers": [], "flex": []}
 
     for player in pir_players:
         details = player.get("details", {})
@@ -151,7 +149,7 @@ def build_fantasy_roster(leaders: dict) -> dict:
             "team": details.get("team", {}).get("name", "").split(";")[0],
             "position": position,
             "pir": player.get("average", 0),
-            "rank": player.get("rank")
+            "rank": player.get("rank"),
         }
 
         if "guard" in position and len(roster["guards"]) < 2:
@@ -178,7 +176,7 @@ def display_fantasy_roster(roster: dict):
         print(f"\n{position.upper()}:")
         for p in players:
             print(f"  - {p['name']} ({p['team'][:15]}) - PIR: {p['pir']:.1f}")
-            total_pir += p['pir']
+            total_pir += p["pir"]
 
     filled_spots = sum(len(p) for p in roster.values())
     print(f"\n{'=' * 40}")

@@ -39,17 +39,16 @@ def example_v3_api():
     # Get player leaders for current season (E2025)
     try:
         leaders = client.v3.player_stats.leaders(
-            competition_code="E",
-            season_mode="Single",
-            season_code="E2025",
-            limit=3
+            competition_code="E", season_mode="Single", season_code="E2025", limit=3
         )
         # Leaders returns categories like 'points', 'rebounds', etc.
         points_leaders = leaders.get("points", [])
         print("V3 Points Leaders (E2025):")
         for player in points_leaders[:3]:
             details = player.get("details", {})
-            print(f"  {player.get('rank')}. {details.get('name')} - {player.get('average'):.1f} ppg")
+            print(
+                f"  {player.get('rank')}. {details.get('name')} - {player.get('average'):.1f} ppg"
+            )
     except APIError as e:
         print(f"V3 Player Leaders: API error - {e}")
 

@@ -108,9 +108,9 @@ class TestSyncAsyncParity:
             if expected_async not in async_methods:
                 missing_async.append(sync_method)
 
-        assert not missing_async, (
-            f"{api_class.__name__} is missing async versions for: {missing_async}"
-        )
+        assert (
+            not missing_async
+        ), f"{api_class.__name__} is missing async versions for: {missing_async}"
 
     @pytest.mark.parametrize("api_class", ALL_API_CLASSES)
     def test_async_methods_have_matching_signatures(self, api_class: type) -> None:
@@ -155,23 +155,17 @@ class TestMethodCounts:
 
     def test_v1_has_6_classes(self) -> None:
         """V1 should have 6 API classes."""
-        v1_count = sum(
-            1 for c in ALL_API_CLASSES if "euroleague.api.v1" in c.__module__
-        )
+        v1_count = sum(1 for c in ALL_API_CLASSES if "euroleague.api.v1" in c.__module__)
         assert v1_count == 6
 
     def test_v2_has_14_classes(self) -> None:
         """V2 should have 14 API classes."""
-        v2_count = sum(
-            1 for c in ALL_API_CLASSES if "euroleague.api.v2" in c.__module__
-        )
+        v2_count = sum(1 for c in ALL_API_CLASSES if "euroleague.api.v2" in c.__module__)
         assert v2_count == 14
 
     def test_v3_has_7_classes(self) -> None:
         """V3 should have 7 API classes."""
-        v3_count = sum(
-            1 for c in ALL_API_CLASSES if "euroleague.api.v3" in c.__module__
-        )
+        v3_count = sum(1 for c in ALL_API_CLASSES if "euroleague.api.v3" in c.__module__)
         assert v3_count == 7
 
 

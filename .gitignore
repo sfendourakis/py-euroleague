@@ -25,12 +25,11 @@ wheels/
 venv/
 ENV/
 
-# Poetry
-poetry.lock
-
 # Testing
 .pytest_cache/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
 .tox/
 .nox/
@@ -52,9 +51,15 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+.secrets/
+
 # Project specific
 .euroleague/
 
 # Claude Code
 .claude/
-
