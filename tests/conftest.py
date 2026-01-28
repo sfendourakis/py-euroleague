@@ -1,22 +1,10 @@
 """Pytest configuration and fixtures."""
 
+from unittest.mock import AsyncMock, Mock
+
 import pytest
-from unittest.mock import Mock, AsyncMock
 
-from euroleague import EuroleagueClient, AsyncEuroleagueClient
-from euroleague.auth import TokenInfo, InMemoryTokenStorage
-
-
-@pytest.fixture
-def token_storage():
-    """Provide pre-authenticated token storage."""
-    storage = InMemoryTokenStorage()
-    storage.store_token(TokenInfo(
-        access_token="test_token",
-        token_type="Bearer",
-        expires_in=3600
-    ))
-    return storage
+from euroleague import AsyncEuroleagueClient, EuroleagueClient
 
 
 @pytest.fixture
@@ -36,18 +24,12 @@ def mock_async_http_client():
 
 
 @pytest.fixture
-def client(token_storage):
+def client():
     """Provide configured test client."""
-    return EuroleagueClient(
-        client_id="test_client",
-        token_storage=token_storage
-    )
+    return EuroleagueClient()
 
 
 @pytest.fixture
-def async_client(token_storage):
+def async_client():
     """Provide async test client."""
-    return AsyncEuroleagueClient(
-        client_id="test_client",
-        token_storage=token_storage
-    )
+    return AsyncEuroleagueClient()

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from euroleague.api.v3.clubs import ClubsAPI
 from euroleague.api.v3.coaches import CoachesAPI
@@ -30,7 +30,7 @@ class V3API:
         >>> standings = client.v3.standings.basic(competition="E", season="2024", round=10)
     """
 
-    def __init__(self, http_client: Union[HTTPClient, AsyncHTTPClient]) -> None:
+    def __init__(self, http_client: HTTPClient | AsyncHTTPClient) -> None:
         """Initialize V3 API namespace.
 
         Args:

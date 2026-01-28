@@ -1,6 +1,6 @@
 """V2 Referees API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -22,7 +22,7 @@ class RefereesAPI(BaseAPI):
         self,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get all registered referees.
 
@@ -46,7 +46,7 @@ class RefereesAPI(BaseAPI):
         self,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get all registered referees (async)."""
         return await self._get_async(
@@ -77,7 +77,7 @@ class RefereesAPI(BaseAPI):
         competition_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get referees for a competition.
 
@@ -92,7 +92,7 @@ class RefereesAPI(BaseAPI):
         """
         # Need to use a different base path for this endpoint
         path = f"v2/competitions/{competition_code}/referees"
-        return self._http.get(
+        return self._http.get(  # type: ignore[return-value]
             path,
             params={
                 "Limit": limit,
@@ -106,11 +106,11 @@ class RefereesAPI(BaseAPI):
         competition_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get referees for a competition (async)."""
         path = f"v2/competitions/{competition_code}/referees"
-        return await self._http.get(
+        return await self._http.get(  # type: ignore[misc,no-any-return]
             path,
             params={
                 "Limit": limit,
@@ -125,7 +125,7 @@ class RefereesAPI(BaseAPI):
         season_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get referees for a season.
 
@@ -140,7 +140,7 @@ class RefereesAPI(BaseAPI):
             Paginated list of referees
         """
         path = f"v2/competitions/{competition_code}/seasons/{season_code}/referees"
-        return self._http.get(
+        return self._http.get(  # type: ignore[return-value]
             path,
             params={
                 "Limit": limit,
@@ -155,11 +155,11 @@ class RefereesAPI(BaseAPI):
         season_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get referees for a season (async)."""
         path = f"v2/competitions/{competition_code}/seasons/{season_code}/referees"
-        return await self._http.get(
+        return await self._http.get(  # type: ignore[misc,no-any-return]
             path,
             params={
                 "Limit": limit,

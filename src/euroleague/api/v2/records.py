@@ -1,6 +1,6 @@
 """V2 Records API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -166,7 +166,7 @@ class RecordsAPI(BaseAPI):
         self,
         competition_code: str,
         person_code: str,
-        phase_type_code: Optional[str] = None,
+        phase_type_code: str | None = None,
     ) -> dict[str, Any]:
         """Get player career highs.
 
@@ -191,7 +191,7 @@ class RecordsAPI(BaseAPI):
         self,
         competition_code: str,
         person_code: str,
-        phase_type_code: Optional[str] = None,
+        phase_type_code: str | None = None,
     ) -> dict[str, Any]:
         """Get player career highs (async)."""
         return await self._get_async(
@@ -250,12 +250,12 @@ class RecordsAPI(BaseAPI):
         self,
         competition_code: str,
         person_code: str,
-        person_type: Optional[str] = None,
-        club_code: Optional[str] = None,
-        versus_club_code: Optional[str] = None,
-        versus_person_code: Optional[str] = None,
-        versus_person_type: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
+        person_type: str | None = None,
+        club_code: str | None = None,
+        versus_club_code: str | None = None,
+        versus_person_code: str | None = None,
+        versus_person_type: str | None = None,
+        phase_type_code: str | None = None,
     ) -> dict[str, Any]:
         """Get person game records.
 
@@ -292,12 +292,12 @@ class RecordsAPI(BaseAPI):
         self,
         competition_code: str,
         person_code: str,
-        person_type: Optional[str] = None,
-        club_code: Optional[str] = None,
-        versus_club_code: Optional[str] = None,
-        versus_person_code: Optional[str] = None,
-        versus_person_type: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
+        person_type: str | None = None,
+        club_code: str | None = None,
+        versus_club_code: str | None = None,
+        versus_person_code: str | None = None,
+        versus_person_type: str | None = None,
+        phase_type_code: str | None = None,
     ) -> dict[str, Any]:
         """Get person game records (async)."""
         return await self._get_async(

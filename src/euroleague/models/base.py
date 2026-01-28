@@ -1,6 +1,6 @@
 """Base model classes for Euroleague API responses."""
 
-from typing import Generic, List, TypeVar
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict
 
@@ -21,7 +21,7 @@ class EuroleagueModel(BaseModel):
 class PaginatedResponse(EuroleagueModel, Generic[T]):
     """Generic paginated response wrapper."""
 
-    data: List[T]
+    data: list[T]
     total: int
     offset: int = 0
     limit: int = 20

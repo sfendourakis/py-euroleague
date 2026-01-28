@@ -1,6 +1,6 @@
 """V3 Clubs API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -22,8 +22,8 @@ class ClubsAPI(BaseAPI):
         self,
         limit: int = 20,
         offset: int = 0,
-        has_parent_club: Optional[bool] = None,
-        search: Optional[str] = None,
+        has_parent_club: bool | None = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get all registered clubs.
 
@@ -49,8 +49,8 @@ class ClubsAPI(BaseAPI):
         self,
         limit: int = 20,
         offset: int = 0,
-        has_parent_club: Optional[bool] = None,
-        search: Optional[str] = None,
+        has_parent_club: bool | None = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get all registered clubs (async)."""
         return await self._get_async(

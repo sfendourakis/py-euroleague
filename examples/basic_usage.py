@@ -1,146 +1,88 @@
 """Basic usage example for py-euroleague."""
 
 from euroleague import EuroleagueClient
-from euroleague.auth import TokenInfo
+from euroleague.exceptions import APIError, NotFoundError
 
 # Initialize the client
-client = EuroleagueClient(client_id="your_client_id")
-
-# Option 1: OAuth2 PKCE Authentication Flow
-# -----------------------------------------
-# Step 1: Generate authorization URL
-auth_url, state, verifier = client.get_authorization_url()
-print(f"Please visit this URL to authorize: {auth_url}")
-print(f"State: {state}")
-print(f"Save this verifier: {verifier}")
-
-# Step 2: After user authorizes and is redirected, exchange the code
-# The authorization code comes from the redirect URL query parameter
-# auth_code = "code_from_redirect_url"
-# client.authenticate(code=auth_code, code_verifier=verifier)
-
-
-# Option 2: Use a pre-obtained token
-# ----------------------------------
-# If you already have an access token, you can set it directly:
-# client.set_token(TokenInfo(
-#     access_token="your_access_token",
-#     token_type="Bearer",
-#     expires_in=3600
-# ))
-
-
-# Example API calls (requires authentication)
-# -------------------------------------------
-
-def example_v1_api():
-    """V1 API examples (legacy/simple endpoints)."""
-    # Get standings for a season
-    standings = client.v1.standings.get(season_code="E2024")
-    print("V1 Standings:", standings)
-
-    # Get game box score
-    box_score = client.v1.games.get(season_code="E2024", game_code=1)
-    print("V1 Box Score:", box_score)
-
-    # Get teams with rosters
-    teams = client.v1.teams.get(season_code="E2024")
-    print("V1 Teams:", teams)
+client = EuroleagueClient()
 
 
 def example_v2_api():
     """V2 API examples (comprehensive endpoints)."""
-    # List all clubs
-    clubs = client.v2.clubs.list(limit=10)
-    print("V2 Clubs:", clubs)
+    print("\n--- V2 API Examples ---")
+
+    # List clubs (default limit is 20, but there are 400+ total)
+    clubs = client.v2.clubs.list(limit=50)
+    total_clubs = clubs.get("total", 0)
+    print(f"V2 Clubs: Fetched {len(clubs.get('data', []))}, Total available: {total_clubs}")
 
     # Get specific club
-    barcelona = client.v2.clubs.get("BAR")
-    print("V2 Barcelona:", barcelona)
+    try:
+        barcelona = client.v2.clubs.get("BAR")
+        print(f"V2 Barcelona: {barcelona.get('name', 'N/A')}")
+    except NotFoundError:
+        print("V2 Barcelona: Not found")
 
     # List competitions
     competitions = client.v2.competitions.list()
-    print("V2 Competitions:", competitions)
+    print(f"V2 Competitions: Found {len(competitions.get('data', []))} competitions")
 
-    # Get games for a season
-    games = client.v2.games.list(
-        competition_code="E",
-        season_code="2024",
-        limit=10
-    )
-    print("V2 Games:", games)
-
-    # Get people (players, coaches)
-    people = client.v2.people.list(search="Doncic", limit=5)
-    print("V2 People search:", people)
-
-    # Get season standings
-    standings = client.v2.standings.get_round(
-        competition_code="E",
-        season_code="2024",
-        round_number=10
-    )
-    print("V2 Standings:", standings)
+    # List seasons for Euroleague
+    seasons = client.v2.seasons.list(competition_code="E", limit=5)
+    print(f"V2 Recent seasons: {[s.get('code') for s in seasons.get('data', [])]}")
 
 
 def example_v3_api():
     """V3 API examples (statistics-focused endpoints)."""
-    # Get player leaders
-    leaders = client.v3.player_stats.leaders(
-        competition_code="E",
-        season_code="2024",
-        limit=10
-    )
-    print("V3 Player Leaders:", leaders)
+    print("\n--- V3 API Examples ---")
 
-    # Get traditional player stats
-    traditional = client.v3.player_stats.traditional(
-        competition_code="E",
-        season_code="2024",
-        limit=10
-    )
-    print("V3 Traditional Stats:", traditional)
+    # Get player leaders for current season (E2025)
+    try:
+        leaders = client.v3.player_stats.leaders(
+            competition_code="E",
+            season_mode="Single",
+            season_code="E2025",
+            limit=3
+        )
+        # Leaders returns categories like 'points', 'rebounds', etc.
+        points_leaders = leaders.get("points", [])
+        print("V3 Points Leaders (E2025):")
+        for player in points_leaders[:3]:
+            details = player.get("details", {})
+            print(f"  {player.get('rank')}. {details.get('name')} - {player.get('average'):.1f} ppg")
+    except APIError as e:
+        print(f"V3 Player Leaders: API error - {e}")
 
-    # Get advanced player stats
-    advanced = client.v3.player_stats.advanced(
-        competition_code="E",
-        season_code="2024",
-        limit=10
-    )
-    print("V3 Advanced Stats:", advanced)
-
-    # Get team stats
-    team_stats = client.v3.team_stats.traditional(
-        competition_code="E",
-        season_code="2024"
-    )
-    print("V3 Team Stats:", team_stats)
-
-    # Get various standings views
-    basic_standings = client.v3.standings.basic("E", "2024", 10)
-    streaks = client.v3.standings.streaks("E", "2024", 10)
-    margins = client.v3.standings.margins("E", "2024", 10)
-    print("V3 Basic Standings:", basic_standings)
-    print("V3 Streaks:", streaks)
-    print("V3 Margins:", margins)
+    # Get team stats (note: response uses 'teams' key, not 'data')
+    try:
+        team_stats = client.v3.team_stats.traditional(
+            competition_code="E",
+            season_mode="Single",
+            season_code="E2025",
+        )
+        teams = team_stats.get("teams", [])
+        print(f"V3 Team Stats (E2025): Found {len(teams)} teams")
+        for team in teams[:3]:
+            team_info = team.get("team", {})
+            print(f"  - {team_info.get('name')}: {team.get('pointsScored', 0):.1f} ppg")
+    except APIError as e:
+        print(f"V3 Team Stats: API error - {e}")
 
 
-# Context manager usage
 def example_with_context_manager():
     """Using the client as a context manager."""
-    with EuroleagueClient(client_id="your_client_id") as client:
-        # Client is automatically closed when exiting the context
-        clubs = client.v2.clubs.list()
-        print("Clubs:", clubs)
+    print("\n--- Context Manager Example ---")
+    with EuroleagueClient() as ctx_client:
+        clubs = ctx_client.v2.clubs.list(limit=3)
+        print(f"Clubs via context manager: {[c.get('name') for c in clubs.get('data', [])]}")
 
 
 if __name__ == "__main__":
     print("py-euroleague Basic Usage Examples")
     print("=" * 40)
-    print("\nNote: You need to authenticate before making API calls.")
-    print("See the authentication examples above.")
 
-    # Uncomment to run examples after authentication:
-    # example_v1_api()
-    # example_v2_api()
-    # example_v3_api()
+    example_v2_api()
+    example_v3_api()
+    example_with_context_manager()
+
+    print("\nDone!")

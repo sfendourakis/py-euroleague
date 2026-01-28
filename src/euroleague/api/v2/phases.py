@@ -1,6 +1,6 @@
 """V2 Phases API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -22,7 +22,7 @@ class PhasesAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get phases for a season.
 
@@ -46,7 +46,7 @@ class PhasesAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get phases for a season (async)."""
         return await self._get_async(
@@ -101,7 +101,7 @@ class PhasesAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         club_code: str,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get phases for a specific club in a season.
 
@@ -129,7 +129,7 @@ class PhasesAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         club_code: str,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get phases for a specific club in a season (async)."""
         return await self._get_async(

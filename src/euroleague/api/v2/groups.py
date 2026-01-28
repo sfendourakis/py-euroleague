@@ -1,6 +1,6 @@
 """V2 Groups API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -25,7 +25,7 @@ class GroupsAPI(BaseAPI):
         phase_type_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get groups for a phase.
 
@@ -61,7 +61,7 @@ class GroupsAPI(BaseAPI):
         phase_type_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get groups for a phase (async)."""
         return await self._get_async(

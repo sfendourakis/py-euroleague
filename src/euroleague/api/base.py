@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from euroleague.http import AsyncHTTPClient, HTTPClient
@@ -16,7 +16,7 @@ class BaseAPI:
 
     def __init__(
         self,
-        http_client: Union[HTTPClient, AsyncHTTPClient],
+        http_client: HTTPClient | AsyncHTTPClient,
         base_path: str = "",
     ) -> None:
         """Initialize the API endpoint group.
@@ -45,7 +45,7 @@ class BaseAPI:
     def _get(
         self,
         *path_parts: str,
-        params: Optional[dict[str, Any]] = None,
+        params: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Make GET request (synchronous).
 
@@ -57,12 +57,12 @@ class BaseAPI:
             Parsed JSON response
         """
         path = self._build_path(*path_parts)
-        return self._http.get(path, params=params)
+        return self._http.get(path, params=params)  # type: ignore[return-value]
 
     async def _get_async(
         self,
         *path_parts: str,
-        params: Optional[dict[str, Any]] = None,
+        params: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Make GET request (asynchronous).
 
@@ -74,4 +74,4 @@ class BaseAPI:
             Parsed JSON response
         """
         path = self._build_path(*path_parts)
-        return await self._http.get(path, params=params)
+        return await self._http.get(path, params=params)  # type: ignore[misc,no-any-return]

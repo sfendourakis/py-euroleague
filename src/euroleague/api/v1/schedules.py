@@ -1,6 +1,6 @@
 """V1 Schedules API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -24,7 +24,7 @@ class SchedulesAPI(BaseAPI):
     def get(
         self,
         season_code: str,
-        game_number: Optional[int] = None,
+        game_number: int | None = None,
     ) -> dict[str, Any]:
         """Get game schedule information.
 
@@ -43,7 +43,7 @@ class SchedulesAPI(BaseAPI):
     async def get_async(
         self,
         season_code: str,
-        game_number: Optional[int] = None,
+        game_number: int | None = None,
     ) -> dict[str, Any]:
         """Get game schedule information (async).
 

@@ -1,6 +1,6 @@
 """Custom exceptions for the Euroleague API client."""
 
-from typing import Any, Optional
+from typing import Any
 
 
 class EuroleagueError(Exception):
@@ -35,7 +35,7 @@ class NotFoundError(EuroleagueError):
 class RateLimitError(EuroleagueError):
     """Rate limit exceeded (429)."""
 
-    def __init__(self, retry_after: Optional[int] = None) -> None:
+    def __init__(self, retry_after: int | None = None) -> None:
         self.retry_after = retry_after
         message = "Rate limit exceeded"
         if retry_after:
@@ -46,7 +46,7 @@ class RateLimitError(EuroleagueError):
 class ValidationError(EuroleagueError):
     """Request validation error (400)."""
 
-    def __init__(self, message: str, details: Optional[dict[str, Any]] = None) -> None:
+    def __init__(self, message: str, details: dict[str, Any] | None = None) -> None:
         self.details = details or {}
         super().__init__(message)
 
@@ -58,8 +58,8 @@ class APIError(EuroleagueError):
         self,
         message: str,
         status_code: int,
-        response_body: Optional[dict[str, Any]] = None,
-        request_id: Optional[str] = None,
+        response_body: dict[str, Any] | None = None,
+        request_id: str | None = None,
     ) -> None:
         self.status_code = status_code
         self.response_body = response_body

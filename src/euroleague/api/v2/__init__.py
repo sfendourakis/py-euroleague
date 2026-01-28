@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from euroleague.api.v2.clubs import ClubsAPI
 from euroleague.api.v2.competitions import CompetitionsAPI
@@ -37,7 +37,7 @@ class V2API:
         >>> person = client.v2.people.get("PDEL")
     """
 
-    def __init__(self, http_client: Union[HTTPClient, AsyncHTTPClient]) -> None:
+    def __init__(self, http_client: HTTPClient | AsyncHTTPClient) -> None:
         """Initialize V2 API namespace.
 
         Args:

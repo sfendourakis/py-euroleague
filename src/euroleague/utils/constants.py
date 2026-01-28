@@ -5,11 +5,6 @@ from enum import Enum
 # API Base URL
 BASE_URL = "https://api-live.euroleague.net"
 
-# OAuth2 endpoints
-AUTH_URL = "https://auth.euroleague.net/oauth2/authorize"
-TOKEN_URL = "https://auth.euroleague.net/oauth2/token"
-OAUTH_SCOPE = "euroleagueapi"
-
 
 class CompetitionCode(str, Enum):
     """Euroleague competition codes."""

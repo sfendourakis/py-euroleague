@@ -1,6 +1,6 @@
 """V2 Games API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -23,14 +23,14 @@ class GamesAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        phase_type_code: Optional[str] = None,
-        round_number: Optional[int] = None,
-        group_name: Optional[str] = None,
-        group_id: Optional[int] = None,
-        team_code: Optional[str] = None,
+        phase_type_code: str | None = None,
+        round_number: int | None = None,
+        group_name: str | None = None,
+        group_id: int | None = None,
+        team_code: str | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get games for a season.
 
@@ -70,14 +70,14 @@ class GamesAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        phase_type_code: Optional[str] = None,
-        round_number: Optional[int] = None,
-        group_name: Optional[str] = None,
-        group_id: Optional[int] = None,
-        team_code: Optional[str] = None,
+        phase_type_code: str | None = None,
+        round_number: int | None = None,
+        group_name: str | None = None,
+        group_id: int | None = None,
+        team_code: str | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get games for a season (async)."""
         return await self._get_async(

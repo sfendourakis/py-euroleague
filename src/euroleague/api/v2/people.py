@@ -1,6 +1,6 @@
 """V2 People API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -23,7 +23,7 @@ class PeopleAPI(BaseAPI):
         self,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get all registered people.
 
@@ -47,7 +47,7 @@ class PeopleAPI(BaseAPI):
         self,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get all registered people (async)."""
         return await self._get_async(
@@ -93,7 +93,7 @@ class PeopleAPI(BaseAPI):
         person_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get person's seasons.
 
@@ -121,7 +121,7 @@ class PeopleAPI(BaseAPI):
         person_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get person's seasons (async)."""
         return await self._get_async(

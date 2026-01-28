@@ -7,8 +7,8 @@ asynchronous clients.
 
 Example:
     >>> from euroleague import EuroleagueClient
-    >>> client = EuroleagueClient(client_id="your_client_id")
-    >>> clubs = client.v2.clubs.list()
+    >>> with EuroleagueClient() as client:
+    ...     clubs = client.v2.clubs.list()
 """
 
 from euroleague._version import __version__

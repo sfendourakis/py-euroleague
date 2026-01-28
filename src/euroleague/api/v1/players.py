@@ -1,6 +1,6 @@
 """V1 Players API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 

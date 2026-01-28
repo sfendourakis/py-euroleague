@@ -1,6 +1,6 @@
 """V2 Season Clubs API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -24,7 +24,7 @@ class SeasonClubsAPI(BaseAPI):
         season_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get clubs for a season.
 
@@ -56,7 +56,7 @@ class SeasonClubsAPI(BaseAPI):
         season_code: str,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get clubs for a season (async)."""
         return await self._get_async(

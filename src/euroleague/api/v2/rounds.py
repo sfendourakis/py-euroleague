@@ -1,6 +1,6 @@
 """V2 Rounds API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -22,10 +22,10 @@ class RoundsAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        phase_type_code: Optional[str] = None,
+        phase_type_code: str | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get rounds for a season.
 
@@ -57,10 +57,10 @@ class RoundsAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        phase_type_code: Optional[str] = None,
+        phase_type_code: str | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get rounds for a season (async)."""
         return await self._get_async(

@@ -1,6 +1,6 @@
 """V2 Seasons API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -21,10 +21,10 @@ class SeasonsAPI(BaseAPI):
     def list(
         self,
         competition_code: str,
-        competition_year: Optional[int] = None,
+        competition_year: int | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get seasons for a competition.
 
@@ -52,10 +52,10 @@ class SeasonsAPI(BaseAPI):
     async def list_async(
         self,
         competition_code: str,
-        competition_year: Optional[int] = None,
+        competition_year: int | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get seasons for a competition (async)."""
         return await self._get_async(

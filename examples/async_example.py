@@ -3,76 +3,51 @@
 import asyncio
 
 from euroleague import AsyncEuroleagueClient
-from euroleague.auth import TokenInfo
+from euroleague.exceptions import APIError, NotFoundError
 
 
 async def main():
-    """Main async example."""
-    # Initialize the async client
-    async with AsyncEuroleagueClient(client_id="your_client_id") as client:
-        # Set a pre-obtained token (or use OAuth2 flow)
-        # client.set_token(TokenInfo(
-        #     access_token="your_access_token",
-        #     token_type="Bearer",
-        #     expires_in=3600
-        # ))
-
-        # Example: Parallel API calls for better performance
-        # This fetches all data simultaneously instead of sequentially
-        games, standings, player_leaders, team_stats = await asyncio.gather(
-            client.v2.games.list_async(
-                competition_code="E",
-                season_code="2024",
-                limit=10
-            ),
-            client.v3.standings.basic_async("E", "2024", 10),
-            client.v3.player_stats.leaders_async("E", season_code="2024"),
-            client.v3.team_stats.traditional_async("E", season_code="2024"),
+    """Main async example demonstrating parallel API calls."""
+    print("\n--- Parallel API Calls ---")
+    async with AsyncEuroleagueClient() as client:
+        # Parallel API calls for better performance
+        clubs, competitions = await asyncio.gather(
+            client.v2.clubs.list_async(limit=5),
+            client.v2.competitions.list_async(),
         )
 
-        print(f"Fetched {len(games.get('data', []))} games")
-        print(f"Standings: {standings}")
-        print(f"Player Leaders: {player_leaders}")
-        print(f"Team Stats: {team_stats}")
+        print(f"Fetched {len(clubs.get('data', []))} clubs")
+        print(f"Fetched {len(competitions.get('data', []))} competitions")
 
 
 async def example_sequential():
     """Sequential async calls example."""
-    async with AsyncEuroleagueClient(client_id="your_client_id") as client:
+    print("\n--- Sequential API Calls ---")
+    async with AsyncEuroleagueClient() as client:
         # Get clubs first
         clubs = await client.v2.clubs.list_async(limit=5)
-        print("Clubs:", clubs)
+        print(f"Found {len(clubs.get('data', []))} clubs")
 
-        # Then get details for each club (could be parallelized)
-        for club_data in clubs.get("data", [])[:3]:
-            club_code = club_data.get("clubCode")
+        # Then get details for a specific club
+        for club_data in clubs.get("data", [])[:2]:
+            club_code = club_data.get("code")
             if club_code:
-                info = await client.v2.clubs.get_info_async(club_code)
-                print(f"Club {club_code} info:", info)
+                try:
+                    info = await client.v2.clubs.get_async(club_code)
+                    print(f"  Club {club_code}: {info.get('name', 'N/A')}")
+                except NotFoundError:
+                    print(f"  Club {club_code}: Not found")
 
 
 async def example_error_handling():
     """Error handling example."""
-    from euroleague.exceptions import (
-        AuthenticationError,
-        NotFoundError,
-        RateLimitError,
-        APIError,
-    )
-
-    async with AsyncEuroleagueClient(client_id="your_client_id") as client:
+    print("\n--- Error Handling ---")
+    async with AsyncEuroleagueClient() as client:
         try:
-            # This will likely fail without proper authentication
-            clubs = await client.v2.clubs.list_async()
-            print("Clubs:", clubs)
-        except AuthenticationError as e:
-            print(f"Authentication failed: {e}")
-            print("Please set a valid token or complete OAuth2 flow")
+            clubs = await client.v2.clubs.list_async(limit=3)
+            print(f"Successfully fetched {len(clubs.get('data', []))} clubs")
         except NotFoundError as e:
-            print(f"Resource not found: {e.resource_type} - {e.identifier}")
-        except RateLimitError as e:
-            print(f"Rate limited! Retry after {e.retry_after} seconds")
-            await asyncio.sleep(e.retry_after or 60)
+            print(f"Resource not found: {e}")
         except APIError as e:
             print(f"API error [{e.status_code}]: {e.message}")
 
@@ -80,13 +55,9 @@ async def example_error_handling():
 if __name__ == "__main__":
     print("py-euroleague Async Usage Examples")
     print("=" * 40)
-    print("\nNote: You need to authenticate before making API calls.")
 
-    # Run the main example
-    # asyncio.run(main())
+    asyncio.run(main())
+    asyncio.run(example_sequential())
+    asyncio.run(example_error_handling())
 
-    # Or run sequential example
-    # asyncio.run(example_sequential())
-
-    # Or run error handling example
-    # asyncio.run(example_error_handling())
+    print("\nDone!")

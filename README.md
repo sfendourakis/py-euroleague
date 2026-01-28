@@ -1,15 +1,6 @@
 # py-euroleague
 
-A Python wrapper for the Euroleague Basketball API, providing easy access to game statistics, standings, player information, and more.
-
-## Features
-
-- **Full API Coverage**: Supports all three API versions (v1, v2, v3)
-- **Type Hints**: Full type annotations for IDE support
-- **Sync & Async**: Both synchronous and asynchronous clients
-- **OAuth2 PKCE**: Secure authentication flow
-- **Automatic Retries**: Built-in retry logic for failed requests
-- **Token Persistence**: File-based token storage for session persistence
+A Python wrapper for the Euroleague Basketball API. Access game statistics, player performance, team analytics, standings, and more.
 
 ## Installation
 
@@ -17,202 +8,211 @@ A Python wrapper for the Euroleague Basketball API, providing easy access to gam
 pip install py-euroleague
 ```
 
-For development:
-```bash
-pip install py-euroleague[dev]
-```
-
 ## Quick Start
 
-### Authentication
-
-The Euroleague API requires OAuth2 PKCE authentication:
-
 ```python
 from euroleague import EuroleagueClient
 
-client = EuroleagueClient(client_id="your_client_id")
+client = EuroleagueClient()
 
-# Step 1: Get authorization URL
-auth_url, state, verifier = client.get_authorization_url()
-print(f"Visit: {auth_url}")
+# Get current season standings
+standings = client.v3.standings.basic("E", "E2025", round_number=20)
 
-# Step 2: After user authorizes, exchange the code
-client.authenticate(code="code_from_redirect", code_verifier=verifier)
+# Get top scorers
+leaders = client.v3.player_stats.leaders("E", season_code="E2025", limit=10)
+for player in leaders["points"][:5]:
+    name = player["details"]["name"]
+    ppg = player["average"]
+    print(f"{name}: {ppg:.1f} PPG")
+
+client.close()
 ```
 
-Or use a pre-obtained token:
+Or use as a context manager:
 
 ```python
-from euroleague import EuroleagueClient
-from euroleague.auth import TokenInfo
-
-client = EuroleagueClient(client_id="your_client_id")
-client.set_token(TokenInfo(
-    access_token="your_access_token",
-    token_type="Bearer",
-    expires_in=3600
-))
+with EuroleagueClient() as client:
+    clubs = client.v2.clubs.list(limit=10)
+    print(f"Found {len(clubs['data'])} clubs")
 ```
 
-### Basic Usage
+## Statistics & Analytics
+
+### Player Statistics
 
 ```python
-from euroleague import EuroleagueClient
-
-with EuroleagueClient(client_id="your_client_id") as client:
-    # V1 API - Simple/Legacy endpoints
-    standings = client.v1.standings.get(season_code="E2024")
-    box_score = client.v1.games.get(season_code="E2024", game_code=1)
-
-    # V2 API - Comprehensive endpoints
-    clubs = client.v2.clubs.list()
-    games = client.v2.games.list(competition_code="E", season_code="2024")
-    players = client.v2.season_people.list(
+with EuroleagueClient() as client:
+    # Season leaders across all categories
+    leaders = client.v3.player_stats.leaders(
         competition_code="E",
-        season_code="2024",
-        person_type="Player"
+        season_code="E2025",
+        limit=20
     )
 
-    # V3 API - Statistics-focused endpoints
-    leaders = client.v3.player_stats.leaders(competition_code="E")
+    # Access different stat categories
+    top_scorers = leaders["points"]
+    top_rebounders = leaders["rebounds"]
+    top_playmakers = leaders["assists"]
+    top_pir = leaders["pir"]  # Performance Index Rating
+
+    # Traditional stats (per-game averages)
+    traditional = client.v3.player_stats.traditional(
+        competition_code="E",
+        season_code="E2025"
+    )
+
+    # Advanced analytics
     advanced = client.v3.player_stats.advanced(
         competition_code="E",
-        season_code="2024"
+        season_code="E2025"
     )
-    team_stats = client.v3.team_stats.traditional(competition_code="E")
 ```
 
-### Async Usage
+### Team Statistics
+
+```python
+with EuroleagueClient() as client:
+    # Team traditional stats
+    team_stats = client.v3.team_stats.traditional(
+        competition_code="E",
+        season_code="E2025"
+    )
+
+    for team in team_stats["teams"][:5]:
+        name = team["team"]["name"]
+        ppg = team["pointsScored"]
+        print(f"{name}: {ppg:.1f} PPG")
+
+    # Team advanced stats
+    advanced = client.v3.team_stats.advanced(
+        competition_code="E",
+        season_code="E2025"
+    )
+
+    # Opponent stats (defensive analysis)
+    opponent_stats = client.v3.team_stats.opponents(
+        competition_code="E",
+        season_code="E2025"
+    )
+```
+
+### Game Box Scores
+
+```python
+with EuroleagueClient() as client:
+    # Get game stats with full box score
+    game_stats = client.v3.stats.get_game_stats("E", "E2025", game_code=100)
+
+    # Home team stats
+    home = game_stats["local"]
+    home_total = home["total"]
+    print(f"Home: {home_total['points']} points")
+
+    # Individual player stats
+    for player in home["players"]:
+        name = player["player"]["person"]["name"]
+        pts = player["stats"]["points"]
+        reb = player["stats"]["totalRebounds"]
+        ast = player["stats"]["assistances"]
+        print(f"  {name}: {pts} PTS, {reb} REB, {ast} AST")
+```
+
+### Standings & Rankings
+
+```python
+with EuroleagueClient() as client:
+    # Current standings
+    standings = client.v3.standings.basic("E", "E2025", round_number=20)
+
+    # Streak analysis
+    streaks = client.v3.standings.streaks("E", "E2025", round_number=20)
+
+    # Point differential margins
+    margins = client.v3.standings.margins("E", "E2025", round_number=20)
+```
+
+## Async Support
+
+For better performance with multiple requests:
 
 ```python
 import asyncio
 from euroleague import AsyncEuroleagueClient
 
-async def main():
-    async with AsyncEuroleagueClient(client_id="your_client_id") as client:
-        # Parallel requests for better performance
-        games, standings, leaders = await asyncio.gather(
-            client.v2.games.list_async("E", "2024"),
-            client.v3.standings.basic_async("E", "2024", 10),
-            client.v3.player_stats.leaders_async("E")
+async def analyze_season():
+    async with AsyncEuroleagueClient() as client:
+        # Parallel requests
+        leaders, team_stats, standings = await asyncio.gather(
+            client.v3.player_stats.leaders_async("E", season_code="E2025"),
+            client.v3.team_stats.traditional_async("E", season_code="E2025"),
+            client.v3.standings.basic_async("E", "E2025", 20)
         )
-        print(f"Found {len(games['data'])} games")
+        return leaders, team_stats, standings
 
-asyncio.run(main())
+asyncio.run(analyze_season())
 ```
 
-## API Structure
+## API Versions
 
-### V1 API (Legacy/Simple)
+The Euroleague API has three versions, each with different focuses:
+
+| Version | Focus | Best For |
+|---------|-------|----------|
+| **V1** | Legacy/Simple | Basic box scores, standings |
+| **V2** | Comprehensive | Clubs, games, people, seasons |
+| **V3** | Statistics | Player/team stats, analytics |
+
+### V1 Endpoints
+- `client.v1.standings` - League standings
 - `client.v1.games` - Box scores
 - `client.v1.players` - Player stats
-- `client.v1.results` - Game results
-- `client.v1.schedules` - Schedules
-- `client.v1.standings` - Standings
-- `client.v1.teams` - Teams with rosters
+- `client.v1.teams` - Team rosters
 
-### V2 API (Comprehensive)
+### V2 Endpoints
 - `client.v2.clubs` - Club information
-- `client.v2.competitions` - Competition data
 - `client.v2.games` - Game details and history
-- `client.v2.groups` - Phase groups
 - `client.v2.people` - Players, coaches, personnel
-- `client.v2.phases` - Season phases
-- `client.v2.records` - Historical records
-- `client.v2.referees` - Referee information
-- `client.v2.rounds` - Round information
-- `client.v2.season_clubs` - Season-specific club data
-- `client.v2.season_people` - Season-specific personnel
 - `client.v2.seasons` - Season information
 - `client.v2.standings` - Detailed standings
-- `client.v2.stats` - Club statistics
 
-### V3 API (Statistics-focused)
-- `client.v3.clubs` - Club info
-- `client.v3.coaches` - Coach records
-- `client.v3.games` - Match reports
-- `client.v3.player_stats` - Player statistics (leaders, traditional, advanced, misc, scoring)
-- `client.v3.team_stats` - Team statistics (leaders, traditional, advanced, opponents)
-- `client.v3.standings` - Various standings views (basic, calendar, streaks, margins, ahead/behind)
-- `client.v3.stats` - Game and comparison stats
+### V3 Endpoints (Recommended for Analytics)
+- `client.v3.player_stats` - Leaders, traditional, advanced, scoring stats
+- `client.v3.team_stats` - Traditional, advanced, opponent stats
+- `client.v3.standings` - Basic, streaks, margins, calendar views
+- `client.v3.stats` - Game stats, team comparisons
 
 ## Competition Codes
 
 - `E` - EuroLeague
 - `U` - EuroCup
 
+## Examples
+
+See the [examples/](examples/) directory for complete working examples:
+
+- **basic_usage.py** - Getting started with the API
+- **player_analysis.py** - Player statistics and comparisons
+- **team_analysis.py** - Team performance analysis
+- **game_analysis.py** - Game results and box scores
+- **player_game_logs.py** - Game-by-game player statistics
+- **fantasy_basketball.py** - Fantasy basketball analysis
+- **async_example.py** - Async client usage
+
 ## Error Handling
 
 ```python
 from euroleague import EuroleagueClient
-from euroleague.exceptions import (
-    AuthenticationError,
-    NotFoundError,
-    RateLimitError,
-    APIError
-)
+from euroleague.exceptions import NotFoundError, RateLimitError, APIError
 
-client = EuroleagueClient(client_id="your_client_id")
-
-try:
-    player = client.v2.people.get("INVALID_CODE")
-except NotFoundError as e:
-    print(f"Not found: {e.identifier}")
-except RateLimitError as e:
-    print(f"Rate limited. Retry after {e.retry_after}s")
-except AuthenticationError:
-    print("Please authenticate")
-except APIError as e:
-    print(f"API error [{e.status_code}]: {e.message}")
-```
-
-## Custom Token Storage
-
-For distributed applications or custom persistence:
-
-```python
-from euroleague import EuroleagueClient
-from euroleague.auth import TokenStorage, TokenInfo
-
-class RedisTokenStorage(TokenStorage):
-    def __init__(self, redis_client, key="euroleague:token"):
-        self.redis = redis_client
-        self.key = key
-
-    def store_token(self, token: TokenInfo) -> None:
-        self.redis.set(self.key, token.to_dict())
-
-    def get_token(self) -> TokenInfo | None:
-        data = self.redis.get(self.key)
-        return TokenInfo.from_dict(data) if data else None
-
-    def clear_token(self) -> None:
-        self.redis.delete(self.key)
-
-# Use custom storage
-storage = RedisTokenStorage(redis_client)
-client = EuroleagueClient(client_id="...", token_storage=storage)
-```
-
-## Development
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/py-euroleague.git
-cd py-euroleague
-
-# Install in development mode
-pip install -e ".[dev]"
-
-# Run tests
-pytest
-
-# Type checking
-mypy src/euroleague
-
-# Linting
-ruff check src/
+with EuroleagueClient() as client:
+    try:
+        player = client.v2.people.get("INVALID_CODE")
+    except NotFoundError:
+        print("Player not found")
+    except RateLimitError as e:
+        print(f"Rate limited. Retry after {e.retry_after}s")
+    except APIError as e:
+        print(f"API error: {e.message}")
 ```
 
 ## License
@@ -222,4 +222,3 @@ MIT License - see LICENSE file for details.
 ## Links
 
 - [Euroleague API Documentation](https://api-live.euroleague.net/swagger/index.html)
-- [GitHub Repository](https://github.com/yourusername/py-euroleague)

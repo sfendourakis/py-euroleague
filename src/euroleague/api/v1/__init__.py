@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from euroleague.api.v1.games import GamesAPI
 from euroleague.api.v1.players import PlayersAPI
@@ -27,7 +27,7 @@ class V1API:
         >>> client.v1.standings.get(season_code="E2024")
     """
 
-    def __init__(self, http_client: Union[HTTPClient, AsyncHTTPClient]) -> None:
+    def __init__(self, http_client: HTTPClient | AsyncHTTPClient) -> None:
         """Initialize V1 API namespace.
 
         Args:

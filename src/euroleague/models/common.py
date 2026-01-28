@@ -1,9 +1,8 @@
 """Common/shared models used across API versions."""
 
 from datetime import date, datetime
-from typing import List, Optional
 
-from pydantic import Field, HttpUrl
+from pydantic import Field
 
 from euroleague.models.base import EuroleagueModel
 
@@ -13,18 +12,18 @@ class Competition(EuroleagueModel):
 
     code: str = Field(..., alias="competitionCode", description="Competition code (e.g., 'E')")
     name: str = Field(..., alias="competitionName")
-    alias: Optional[str] = Field(None, alias="competitionAlias")
+    alias: str | None = Field(None, alias="competitionAlias")
 
 
 class Season(EuroleagueModel):
     """Season information."""
 
     code: str = Field(..., alias="seasonCode", description="Season code (e.g., 'E2024')")
-    year: Optional[int] = None
-    name: Optional[str] = None
+    year: int | None = None
+    name: str | None = None
     is_current: bool = Field(False, alias="isCurrent")
-    start_date: Optional[date] = Field(None, alias="startDate")
-    end_date: Optional[date] = Field(None, alias="endDate")
+    start_date: date | None = Field(None, alias="startDate")
+    end_date: date | None = Field(None, alias="endDate")
 
 
 class Club(EuroleagueModel):
@@ -32,16 +31,16 @@ class Club(EuroleagueModel):
 
     code: str = Field(..., alias="clubCode")
     name: str = Field(..., alias="clubName")
-    alias: Optional[str] = Field(None, alias="clubAlias")
-    city: Optional[str] = None
-    country: Optional[str] = None
-    country_code: Optional[str] = Field(None, alias="countryCode")
-    arena: Optional[str] = Field(None, alias="arenaName")
-    arena_capacity: Optional[int] = Field(None, alias="arenaCapacity")
-    website: Optional[str] = None
-    logo_url: Optional[str] = Field(None, alias="logoUrl")
-    primary_color: Optional[str] = Field(None, alias="primaryColor")
-    secondary_color: Optional[str] = Field(None, alias="secondaryColor")
+    alias: str | None = Field(None, alias="clubAlias")
+    city: str | None = None
+    country: str | None = None
+    country_code: str | None = Field(None, alias="countryCode")
+    arena: str | None = Field(None, alias="arenaName")
+    arena_capacity: int | None = Field(None, alias="arenaCapacity")
+    website: str | None = None
+    logo_url: str | None = Field(None, alias="logoUrl")
+    primary_color: str | None = Field(None, alias="primaryColor")
+    secondary_color: str | None = Field(None, alias="secondaryColor")
 
 
 class Person(EuroleagueModel):
@@ -49,28 +48,28 @@ class Person(EuroleagueModel):
 
     code: str = Field(..., alias="personCode")
     name: str = Field(..., alias="personName")
-    first_name: Optional[str] = Field(None, alias="firstName")
-    last_name: Optional[str] = Field(None, alias="lastName")
-    birth_date: Optional[date] = Field(None, alias="birthDate")
-    country: Optional[str] = None
-    country_code: Optional[str] = Field(None, alias="countryCode")
-    height: Optional[int] = Field(None, description="Height in cm")
-    weight: Optional[int] = Field(None, description="Weight in kg")
-    image_url: Optional[str] = Field(None, alias="imageUrl")
+    first_name: str | None = Field(None, alias="firstName")
+    last_name: str | None = Field(None, alias="lastName")
+    birth_date: date | None = Field(None, alias="birthDate")
+    country: str | None = None
+    country_code: str | None = Field(None, alias="countryCode")
+    height: int | None = Field(None, description="Height in cm")
+    weight: int | None = Field(None, description="Weight in kg")
+    image_url: str | None = Field(None, alias="imageUrl")
 
 
 class Player(Person):
     """Player information."""
 
-    position: Optional[str] = None
-    jersey_number: Optional[str] = Field(None, alias="jerseyNumber")
+    position: str | None = None
+    jersey_number: str | None = Field(None, alias="jerseyNumber")
     is_active: bool = Field(True, alias="isActive")
 
 
 class Coach(Person):
     """Coach information."""
 
-    role: Optional[str] = None
+    role: str | None = None
 
 
 class Referee(Person):
@@ -103,18 +102,18 @@ class Game(EuroleagueModel):
     competition_code: str = Field(..., alias="competitionCode")
     season_code: str = Field(..., alias="seasonCode")
     round_number: int = Field(..., alias="round")
-    phase_type: Optional[str] = Field(None, alias="phaseTypeCode")
-    group: Optional[str] = Field(None, alias="groupName")
-    date: Optional[datetime] = Field(None, alias="gameDate")
-    status: Optional[str] = None
-    home_team: Optional[Club] = Field(None, alias="homeTeam")
-    away_team: Optional[Club] = Field(None, alias="awayTeam")
-    home_team_code: Optional[str] = Field(None, alias="homeTeamCode")
-    away_team_code: Optional[str] = Field(None, alias="awayTeamCode")
-    home_score: Optional[int] = Field(None, alias="homeScore")
-    away_score: Optional[int] = Field(None, alias="awayScore")
-    arena: Optional[str] = None
-    attendance: Optional[int] = None
+    phase_type: str | None = Field(None, alias="phaseTypeCode")
+    group: str | None = Field(None, alias="groupName")
+    date: datetime | None = Field(None, alias="gameDate")
+    status: str | None = None
+    home_team: Club | None = Field(None, alias="homeTeam")
+    away_team: Club | None = Field(None, alias="awayTeam")
+    home_team_code: str | None = Field(None, alias="homeTeamCode")
+    away_team_code: str | None = Field(None, alias="awayTeamCode")
+    home_score: int | None = Field(None, alias="homeScore")
+    away_score: int | None = Field(None, alias="awayScore")
+    arena: str | None = None
+    attendance: int | None = None
 
 
 class Phase(EuroleagueModel):
@@ -122,16 +121,16 @@ class Phase(EuroleagueModel):
 
     code: str = Field(..., alias="phaseTypeCode")
     name: str = Field(..., alias="phaseTypeName")
-    alias: Optional[str] = Field(None, alias="phaseTypeAlias")
+    alias: str | None = Field(None, alias="phaseTypeAlias")
 
 
 class Round(EuroleagueModel):
     """Round information within a phase."""
 
     number: int = Field(..., alias="roundNumber")
-    name: Optional[str] = Field(None, alias="roundName")
-    start_date: Optional[date] = Field(None, alias="startDate")
-    end_date: Optional[date] = Field(None, alias="endDate")
+    name: str | None = Field(None, alias="roundName")
+    start_date: date | None = Field(None, alias="startDate")
+    end_date: date | None = Field(None, alias="endDate")
 
 
 class Group(EuroleagueModel):
@@ -139,16 +138,16 @@ class Group(EuroleagueModel):
 
     id: int = Field(..., alias="groupId")
     name: str = Field(..., alias="groupName")
-    raw_name: Optional[str] = Field(None, alias="groupRawName")
+    raw_name: str | None = Field(None, alias="groupRawName")
 
 
 class Standing(EuroleagueModel):
     """Team standing in a round/group."""
 
     position: int
-    club: Optional[Club] = None
-    club_code: Optional[str] = Field(None, alias="clubCode")
-    club_name: Optional[str] = Field(None, alias="clubName")
+    club: Club | None = None
+    club_code: str | None = Field(None, alias="clubCode")
+    club_name: str | None = Field(None, alias="clubName")
     games_played: int = Field(0, alias="gamesPlayed")
     wins: int = 0
     losses: int = 0
@@ -161,10 +160,10 @@ class Standing(EuroleagueModel):
 class PlayerStats(EuroleagueModel):
     """Basic player statistics."""
 
-    player: Optional[Person] = None
-    player_code: Optional[str] = Field(None, alias="playerCode")
-    player_name: Optional[str] = Field(None, alias="playerName")
-    team_code: Optional[str] = Field(None, alias="teamCode")
+    player: Person | None = None
+    player_code: str | None = Field(None, alias="playerCode")
+    player_name: str | None = Field(None, alias="playerName")
+    team_code: str | None = Field(None, alias="teamCode")
     games_played: int = Field(0, alias="gamesPlayed")
     minutes: float = 0.0
     points: float = 0.0
@@ -211,8 +210,8 @@ class PlayerStats(EuroleagueModel):
 class TeamStats(EuroleagueModel):
     """Basic team statistics."""
 
-    team_code: Optional[str] = Field(None, alias="teamCode")
-    team_name: Optional[str] = Field(None, alias="teamName")
+    team_code: str | None = Field(None, alias="teamCode")
+    team_name: str | None = Field(None, alias="teamName")
     games_played: int = Field(0, alias="gamesPlayed")
     wins: int = 0
     losses: int = 0

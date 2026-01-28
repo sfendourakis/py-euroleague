@@ -1,6 +1,6 @@
 """V2 Season People API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -22,12 +22,12 @@ class SeasonPeopleAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        person_type: Optional[str] = None,
-        active: Optional[bool] = None,
+        person_type: str | None = None,
+        active: bool | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
-        sort_by: Optional[str] = None,
+        search: str | None = None,
+        sort_by: str | None = None,
     ) -> dict[str, Any]:
         """Get people for a season.
 
@@ -63,12 +63,12 @@ class SeasonPeopleAPI(BaseAPI):
         self,
         competition_code: str,
         season_code: str,
-        person_type: Optional[str] = None,
-        active: Optional[bool] = None,
+        person_type: str | None = None,
+        active: bool | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
-        sort_by: Optional[str] = None,
+        search: str | None = None,
+        sort_by: str | None = None,
     ) -> dict[str, Any]:
         """Get people for a season (async)."""
         return await self._get_async(
@@ -91,10 +91,10 @@ class SeasonPeopleAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         person_code: str,
-        active: Optional[bool] = None,
+        active: bool | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get specific season person.
 
@@ -129,10 +129,10 @@ class SeasonPeopleAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         person_code: str,
-        active: Optional[bool] = None,
+        active: bool | None = None,
         limit: int = 20,
         offset: int = 0,
-        search: Optional[str] = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get specific season person (async)."""
         return await self._get_async(
@@ -195,9 +195,9 @@ class SeasonPeopleAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         club_code: str,
-        active: Optional[bool] = None,
-        person_type: Optional[str] = None,
-        search: Optional[str] = None,
+        active: bool | None = None,
+        person_type: str | None = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get people for a specific club in a season.
 
@@ -231,9 +231,9 @@ class SeasonPeopleAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         club_code: str,
-        active: Optional[bool] = None,
-        person_type: Optional[str] = None,
-        search: Optional[str] = None,
+        active: bool | None = None,
+        person_type: str | None = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """Get people for a specific club in a season (async)."""
         return await self._get_async(
@@ -299,8 +299,8 @@ class SeasonPeopleAPI(BaseAPI):
     def get_competition_players(
         self,
         competition_code: str,
-        season_code: Optional[str] = None,
-        search: Optional[str] = None,
+        season_code: str | None = None,
+        search: str | None = None,
         limit: int = 20,
         offset: int = 0,
     ) -> dict[str, Any]:
@@ -330,8 +330,8 @@ class SeasonPeopleAPI(BaseAPI):
     async def get_competition_players_async(
         self,
         competition_code: str,
-        season_code: Optional[str] = None,
-        search: Optional[str] = None,
+        season_code: str | None = None,
+        search: str | None = None,
         limit: int = 20,
         offset: int = 0,
     ) -> dict[str, Any]:

@@ -1,6 +1,6 @@
 """V1 Results API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -24,7 +24,7 @@ class ResultsAPI(BaseAPI):
     def get(
         self,
         season_code: str,
-        game_number: Optional[int] = None,
+        game_number: int | None = None,
     ) -> dict[str, Any]:
         """Get all games played in a season after a specific game number.
 
@@ -43,7 +43,7 @@ class ResultsAPI(BaseAPI):
     async def get_async(
         self,
         season_code: str,
-        game_number: Optional[int] = None,
+        game_number: int | None = None,
     ) -> dict[str, Any]:
         """Get all games played in a season after a specific game number (async).
 

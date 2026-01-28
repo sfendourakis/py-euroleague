@@ -1,6 +1,6 @@
 """V3 Team Statistics API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -25,11 +25,11 @@ class TeamStatsAPI(BaseAPI):
     def leaders(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        from_season_code: Optional[str] = None,
-        to_season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        from_season_code: str | None = None,
+        to_season_code: str | None = None,
+        phase_type_code: str | None = None,
         limit: int = 10,
     ) -> dict[str, Any]:
         """Get team leaders statistics.
@@ -64,11 +64,11 @@ class TeamStatsAPI(BaseAPI):
     async def leaders_async(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        from_season_code: Optional[str] = None,
-        to_season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        from_season_code: str | None = None,
+        to_season_code: str | None = None,
+        phase_type_code: str | None = None,
         limit: int = 10,
     ) -> dict[str, Any]:
         """Get team leaders statistics (async)."""
@@ -90,12 +90,12 @@ class TeamStatsAPI(BaseAPI):
     def traditional(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -135,12 +135,12 @@ class TeamStatsAPI(BaseAPI):
     async def traditional_async(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -165,12 +165,12 @@ class TeamStatsAPI(BaseAPI):
     def advanced(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -210,12 +210,12 @@ class TeamStatsAPI(BaseAPI):
     async def advanced_async(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -240,12 +240,12 @@ class TeamStatsAPI(BaseAPI):
     def opponents_traditional(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -285,12 +285,12 @@ class TeamStatsAPI(BaseAPI):
     async def opponents_traditional_async(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -315,12 +315,12 @@ class TeamStatsAPI(BaseAPI):
     def opponents_advanced(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:
@@ -360,12 +360,12 @@ class TeamStatsAPI(BaseAPI):
     async def opponents_advanced_async(
         self,
         competition_code: str,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        phase_type_code: Optional[str] = None,
-        statistic_mode: Optional[str] = None,
-        statistic: Optional[str] = None,
-        sort_direction: Optional[str] = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        phase_type_code: str | None = None,
+        statistic_mode: str | None = None,
+        statistic: str | None = None,
+        sort_direction: str | None = None,
         offset: int = 0,
         limit: int = 20,
     ) -> dict[str, Any]:

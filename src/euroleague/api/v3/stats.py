@@ -1,6 +1,6 @@
 """V3 Stats API endpoint."""
 
-from typing import Any, Optional
+from typing import Any
 
 from euroleague.api.base import BaseAPI
 
@@ -22,14 +22,14 @@ class StatsAPI(BaseAPI):
     def get_player_leaders(
         self,
         competition_code: str,
-        max_round: Optional[int] = None,
-        round_number: Optional[int] = None,
-        club_code: Optional[str] = None,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        category: Optional[str] = None,
-        aggregate: Optional[str] = None,
-        misc: Optional[str] = None,
+        max_round: int | None = None,
+        round_number: int | None = None,
+        club_code: str | None = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        category: str | None = None,
+        aggregate: str | None = None,
+        misc: str | None = None,
         limit: int = 10,
     ) -> dict[str, Any]:
         """Get player leaders statistics.
@@ -70,14 +70,14 @@ class StatsAPI(BaseAPI):
     async def get_player_leaders_async(
         self,
         competition_code: str,
-        max_round: Optional[int] = None,
-        round_number: Optional[int] = None,
-        club_code: Optional[str] = None,
-        season_mode: Optional[str] = None,
-        season_code: Optional[str] = None,
-        category: Optional[str] = None,
-        aggregate: Optional[str] = None,
-        misc: Optional[str] = None,
+        max_round: int | None = None,
+        round_number: int | None = None,
+        club_code: str | None = None,
+        season_mode: str | None = None,
+        season_code: str | None = None,
+        category: str | None = None,
+        aggregate: str | None = None,
+        misc: str | None = None,
         limit: int = 10,
     ) -> dict[str, Any]:
         """Get player leaders statistics (async)."""
@@ -104,7 +104,7 @@ class StatsAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         club_code: str,
-        max_round: Optional[int] = None,
+        max_round: int | None = None,
     ) -> dict[str, Any]:
         """Get club season statistics.
 
@@ -132,7 +132,7 @@ class StatsAPI(BaseAPI):
         competition_code: str,
         season_code: str,
         club_code: str,
-        max_round: Optional[int] = None,
+        max_round: int | None = None,
     ) -> dict[str, Any]:
         """Get club season statistics (async)."""
         return await self._get_async(
