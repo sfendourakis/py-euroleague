@@ -1,4 +1,4 @@
-.PHONY: help install install-dev test test-cov lint typecheck format clean run-example run-async-example build check-all
+.PHONY: help install install-dev test test-cov lint typecheck format clean run-example run-async-example build check-all pre-commit-install pre-commit-run pre-commit-update
 
 help:
 	@echo "py-euroleague development commands"
@@ -17,6 +17,11 @@ help:
 	@echo "Examples:"
 	@echo "  make run-example       Run basic usage example"
 	@echo "  make run-async-example Run async usage example"
+	@echo ""
+	@echo "Pre-commit:"
+	@echo "  make pre-commit-install  Install pre-commit hooks"
+	@echo "  make pre-commit-run      Run pre-commit on all files"
+	@echo "  make pre-commit-update   Update pre-commit hooks"
 	@echo ""
 	@echo "Release:"
 	@echo "  make build        Build package"
@@ -58,6 +63,15 @@ build: clean
 
 check-all: lint typecheck test
 	@echo "All checks passed!"
+
+pre-commit-install: install-dev
+	poetry run pre-commit install
+
+pre-commit-run: install-dev
+	poetry run pre-commit run --all-files
+
+pre-commit-update: install-dev
+	poetry run pre-commit autoupdate
 
 clean:
 	rm -rf .pytest_cache

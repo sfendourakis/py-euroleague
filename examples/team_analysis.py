@@ -21,9 +21,7 @@ from euroleague.exceptions import APIError
 def get_team_standings(client: EuroleagueClient, season_code: str) -> list:
     """Get team standings for a season."""
     stats = client.v3.team_stats.traditional(
-        competition_code="E",
-        season_mode="Single",
-        season_code=season_code
+        competition_code="E", season_mode="Single", season_code=season_code
     )
     return stats.get("teams", [])
 
@@ -31,11 +29,7 @@ def get_team_standings(client: EuroleagueClient, season_code: str) -> list:
 def display_offensive_rankings(teams: list, top_n: int = 10):
     """Display teams ranked by offensive performance (points per game)."""
     # Sort by points scored
-    sorted_teams = sorted(
-        teams,
-        key=lambda t: t.get("pointsScored", 0),
-        reverse=True
-    )[:top_n]
+    sorted_teams = sorted(teams, key=lambda t: t.get("pointsScored", 0), reverse=True)[:top_n]
 
     print(f"\nTop {top_n} Offensive Teams (Points Per Game):")
     print("-" * 70)
@@ -50,21 +44,19 @@ def display_offensive_rankings(teams: list, top_n: int = 10):
         fg_pct = team.get("twoPointersPercentage", "0%")
         three_pct = team.get("threePointersPercentage", "0%")
 
-        print(f"{i:<6}"
-              f"{name:<35}"
-              f"{team.get('pointsScored', 0):>10.1f}"
-              f"{fg_pct:>10}"
-              f"{three_pct:>10}")
+        print(
+            f"{i:<6}"
+            f"{name:<35}"
+            f"{team.get('pointsScored', 0):>10.1f}"
+            f"{fg_pct:>10}"
+            f"{three_pct:>10}"
+        )
 
 
 def display_defensive_rankings(teams: list, top_n: int = 10):
     """Display teams ranked by defensive performance."""
     # For defense, we'd need opponent stats - let's show rebounds and blocks
-    sorted_teams = sorted(
-        teams,
-        key=lambda t: t.get("totalRebounds", 0),
-        reverse=True
-    )[:top_n]
+    sorted_teams = sorted(teams, key=lambda t: t.get("totalRebounds", 0), reverse=True)[:top_n]
 
     print(f"\nTop {top_n} Rebounding Teams:")
     print("-" * 70)
@@ -75,20 +67,18 @@ def display_defensive_rankings(teams: list, top_n: int = 10):
         team_info = team.get("team", {})
         name = team_info.get("name", "N/A")[:33]
 
-        print(f"{i:<6}"
-              f"{name:<35}"
-              f"{team.get('totalRebounds', 0):>10.1f}"
-              f"{team.get('offensiveRebounds', 0):>10.1f}"
-              f"{team.get('defensiveRebounds', 0):>10.1f}")
+        print(
+            f"{i:<6}"
+            f"{name:<35}"
+            f"{team.get('totalRebounds', 0):>10.1f}"
+            f"{team.get('offensiveRebounds', 0):>10.1f}"
+            f"{team.get('defensiveRebounds', 0):>10.1f}"
+        )
 
 
 def display_efficiency_rankings(teams: list, top_n: int = 10):
     """Display teams ranked by overall efficiency (PIR)."""
-    sorted_teams = sorted(
-        teams,
-        key=lambda t: t.get("pir", 0),
-        reverse=True
-    )[:top_n]
+    sorted_teams = sorted(teams, key=lambda t: t.get("pir", 0), reverse=True)[:top_n]
 
     print(f"\nTop {top_n} Teams by PIR (Performance Index Rating):")
     print("-" * 80)
@@ -99,12 +89,14 @@ def display_efficiency_rankings(teams: list, top_n: int = 10):
         team_info = team.get("team", {})
         name = team_info.get("name", "N/A")[:33]
 
-        print(f"{i:<6}"
-              f"{name:<35}"
-              f"{team.get('pir', 0):>10.1f}"
-              f"{team.get('assists', 0):>10.1f}"
-              f"{team.get('steals', 0):>10.1f}"
-              f"{team.get('blocks', 0):>10.1f}")
+        print(
+            f"{i:<6}"
+            f"{name:<35}"
+            f"{team.get('pir', 0):>10.1f}"
+            f"{team.get('assists', 0):>10.1f}"
+            f"{team.get('steals', 0):>10.1f}"
+            f"{team.get('blocks', 0):>10.1f}"
+        )
 
 
 def display_team_profile(client: EuroleagueClient, team_code: str, season_code: str):
@@ -119,8 +111,10 @@ def display_team_profile(client: EuroleagueClient, team_code: str, season_code: 
         print(f"\nClub: {club.get('name', 'N/A')}")
         print(f"Country: {club.get('country', {}).get('name', 'N/A')}")
         if club.get("venue"):
-            print(f"Venue: {club.get('venue', {}).get('name', 'N/A')} "
-                  f"(Capacity: {club.get('venue', {}).get('capacity', 'N/A')})")
+            print(
+                f"Venue: {club.get('venue', {}).get('name', 'N/A')} "
+                f"(Capacity: {club.get('venue', {}).get('capacity', 'N/A')})"
+            )
 
         # Get team stats for season
         stats = client.v3.stats.get_club_stats("E", season_code, team_code)
@@ -132,7 +126,9 @@ def display_team_profile(client: EuroleagueClient, team_code: str, season_code: 
             # API returns a list with accumulated and averagePerGame stats
             if isinstance(stats, list) and len(stats) > 0:
                 avg_stats = stats[0].get("averagePerGame", {})
-                print(f"  Games Played: {stats[0].get('accumulated', {}).get('gamesPlayed', 'N/A')}")
+                print(
+                    f"  Games Played: {stats[0].get('accumulated', {}).get('gamesPlayed', 'N/A')}"
+                )
                 print(f"  Points/Game: {avg_stats.get('points', 0):.1f}")
                 print(f"  Rebounds/Game: {avg_stats.get('totalRebounds', 0):.1f}")
                 print(f"  Assists/Game: {avg_stats.get('assistances', 0):.1f}")

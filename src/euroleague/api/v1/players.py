@@ -51,6 +51,4 @@ class PlayersAPI(BaseAPI):
         Returns:
             Player information with accumulated statistics
         """
-        return await self._get_async(
-            params={"playerCode": player_code, "seasonCode": season_code}
-        )
+        return await self._get_async(params={"playerCode": player_code, "seasonCode": season_code})

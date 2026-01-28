@@ -14,11 +14,7 @@ from euroleague.exceptions import APIError
 
 def get_recent_games(client: EuroleagueClient, season_code: str, limit: int = 200) -> list:
     """Get recent games for a season (fetches more to include completed games)."""
-    games = client.v2.games.list(
-        competition_code="E",
-        season_code=season_code,
-        limit=limit
-    )
+    games = client.v2.games.list(competition_code="E", season_code=season_code, limit=limit)
     # V2 API uses local/road instead of homeClub/awayClub - normalize in analyze_round
     # Return raw data here since it's used before normalize_games is defined
     return games.get("data", [])
@@ -45,11 +41,13 @@ def display_game_schedule(games: list, title: str = "Recent Games"):
         game_date = game.get("date", "TBD")[:10]
         round_num = game.get("round", "")
 
-        print(f"{round_num:<8}"
-              f"{game_date:<12}"
-              f"{home_name:<25}"
-              f"{score:^15}"
-              f"{away_name:<25}")
+        print(
+            f"{round_num:<8}"
+            f"{game_date:<12}"
+            f"{home_name:<25}"
+            f"{score:^15}"
+            f"{away_name:<25}"
+        )
 
 
 def get_game_stats(client: EuroleagueClient, season_code: str, game_code: int) -> dict:
@@ -157,7 +155,9 @@ def display_head_to_head(history: dict):
     # Show records
     records = history.get("records", {})
     if records:
-        print(f"\nAll-time record: {local_name} {records.get('localWins', 0)} - {records.get('roadWins', 0)} {road_name}")
+        local_wins = records.get("localWins", 0)
+        road_wins = records.get("roadWins", 0)
+        print(f"\nAll-time record: {local_name} {local_wins} - {road_wins} {road_name}")
 
     games = history.get("games", [])
     if games:
@@ -212,16 +212,18 @@ def normalize_games(games_data: list) -> list:
     for game in games_data:
         local = game.get("local", {})
         road = game.get("road", {})
-        normalized.append({
-            "gameCode": game.get("gameCode"),
-            "round": game.get("round"),
-            "date": game.get("date"),
-            "homeClub": local.get("club", {}),
-            "awayClub": road.get("club", {}),
-            "homeScore": local.get("score"),
-            "awayScore": road.get("score"),
-            "played": game.get("played"),
-        })
+        normalized.append(
+            {
+                "gameCode": game.get("gameCode"),
+                "round": game.get("round"),
+                "date": game.get("date"),
+                "homeClub": local.get("club", {}),
+                "awayClub": road.get("club", {}),
+                "homeScore": local.get("score"),
+                "awayScore": road.get("score"),
+                "played": game.get("played"),
+            }
+        )
     return normalized
 
 
@@ -232,10 +234,7 @@ def analyze_round(client: EuroleagueClient, season_code: str, round_number: int)
     print("=" * 70)
 
     games = client.v2.games.list(
-        competition_code="E",
-        season_code=season_code,
-        round_number=round_number,
-        limit=20
+        competition_code="E", season_code=season_code, round_number=round_number, limit=20
     )
 
     game_list = normalize_games(games.get("data", []))
@@ -251,7 +250,9 @@ def analyze_round(client: EuroleagueClient, season_code: str, round_number: int)
         print(f"\n{len(completed)} games completed")
 
         # Calculate average scores
-        home_wins = sum(1 for g in completed if (g.get("homeScore", 0) or 0) > (g.get("awayScore", 0) or 0))
+        home_wins = sum(
+            1 for g in completed if (g.get("homeScore", 0) or 0) > (g.get("awayScore", 0) or 0)
+        )
         away_wins = len(completed) - home_wins
 
         print(f"Home wins: {home_wins}, Away wins: {away_wins}")
@@ -285,8 +286,10 @@ def main():
 
             if game_code:
                 print(f"\n--- Analyzing Game {game_code} ---")
-                print(f"{first_game.get('homeClub', {}).get('name')} vs "
-                      f"{first_game.get('awayClub', {}).get('name')}")
+                print(
+                    f"{first_game.get('homeClub', {}).get('name')} vs "
+                    f"{first_game.get('awayClub', {}).get('name')}"
+                )
 
                 # Get game stats
                 stats = get_game_stats(client, season_code, game_code)

@@ -34,7 +34,7 @@ def _calculate_backoff(attempt: int, base_delay: float = 0.5, max_delay: float =
     Returns:
         Delay in seconds for current attempt
     """
-    delay: float = base_delay * (2 ** attempt)
+    delay: float = base_delay * (2**attempt)
     return min(delay, max_delay)
 
 
@@ -129,9 +129,7 @@ class HTTPClient:
                     )
                     time.sleep(delay)
                 else:
-                    logger.error(
-                        f"Request to {url} timed out after {self._max_retries} attempts"
-                    )
+                    logger.error(f"Request to {url} timed out after {self._max_retries} attempts")
                     raise TimeoutError(f"Request timed out after {self._timeout}s") from e
             except httpx.NetworkError as e:
                 last_exception = e
@@ -143,9 +141,7 @@ class HTTPClient:
                     )
                     time.sleep(delay)
                 else:
-                    logger.error(
-                        f"Network error for {url} after {self._max_retries} attempts: {e}"
-                    )
+                    logger.error(f"Network error for {url} after {self._max_retries} attempts: {e}")
                     raise NetworkError(str(e)) from e
 
         # This should not be reached, but just in case
@@ -248,9 +244,7 @@ class AsyncHTTPClient:
                     )
                     await asyncio.sleep(delay)
                 else:
-                    logger.error(
-                        f"Request to {url} timed out after {self._max_retries} attempts"
-                    )
+                    logger.error(f"Request to {url} timed out after {self._max_retries} attempts")
                     raise TimeoutError(f"Request timed out after {self._timeout}s") from e
             except httpx.NetworkError as e:
                 last_exception = e
@@ -262,9 +256,7 @@ class AsyncHTTPClient:
                     )
                     await asyncio.sleep(delay)
                 else:
-                    logger.error(
-                        f"Network error for {url} after {self._max_retries} attempts: {e}"
-                    )
+                    logger.error(f"Network error for {url} after {self._max_retries} attempts: {e}")
                     raise NetworkError(str(e)) from e
 
         # This should not be reached, but just in case

@@ -29,7 +29,8 @@ def search_player(client: EuroleagueClient, name: str) -> dict | None:
 
     print(f"Found {len(players)} player(s) matching '{name}':")
     for p in players:
-        print(f"  - {p.get('name')} (Code: {p.get('code')}, Country: {p.get('country', {}).get('name', 'N/A')})")
+        country_name = p.get("country", {}).get("name", "N/A")
+        print(f"  - {p.get('name')} (Code: {p.get('code')}, Country: {country_name})")
 
     return players[0] if players else None
 
@@ -43,13 +44,12 @@ def get_player_seasons(client: EuroleagueClient, player_code: str) -> list:
         return []
 
 
-def get_season_leaders_by_category(client: EuroleagueClient, season_code: str, limit: int = 10) -> dict:
+def get_season_leaders_by_category(
+    client: EuroleagueClient, season_code: str, limit: int = 10
+) -> dict:
     """Get statistical leaders for a season across all categories."""
     leaders = client.v3.player_stats.leaders(
-        competition_code="E",
-        season_mode="Single",
-        season_code=season_code,
-        limit=limit
+        competition_code="E", season_mode="Single", season_code=season_code, limit=limit
     )
     return leaders
 
@@ -69,10 +69,12 @@ def display_pir_leaders(leaders: dict, top_n: int = 5):
         # Handle multiple teams (player transferred)
         team_name = team.get("name", "N/A").split(";")[0][:18]
 
-        print(f"{player.get('rank'):<6}"
-              f"{details.get('name', 'N/A'):<30}"
-              f"{team_name:<20}"
-              f"{player.get('average', 0):>8.1f}")
+        print(
+            f"{player.get('rank'):<6}"
+            f"{details.get('name', 'N/A'):<30}"
+            f"{team_name:<20}"
+            f"{player.get('average', 0):>8.1f}"
+        )
 
 
 def display_scoring_leaders(leaders: dict, top_n: int = 5):
@@ -89,10 +91,12 @@ def display_scoring_leaders(leaders: dict, top_n: int = 5):
         team = details.get("team", {})
         team_name = team.get("name", "N/A").split(";")[0][:13]
 
-        print(f"{player.get('rank'):<6}"
-              f"{details.get('name', 'N/A'):<30}"
-              f"{team_name:<15}"
-              f"{player.get('average', 0):>8.1f}")
+        print(
+            f"{player.get('rank'):<6}"
+            f"{details.get('name', 'N/A'):<30}"
+            f"{team_name:<15}"
+            f"{player.get('average', 0):>8.1f}"
+        )
 
 
 def display_all_statistical_categories(leaders: dict, top_n: int = 3):
@@ -148,7 +152,7 @@ def compare_players(client: EuroleagueClient, player_names: list[str], season_co
                         found = True
 
                     avg = player.get("average", player.get("value", "N/A"))
-                    if isinstance(avg, (int, float)):
+                    if isinstance(avg, int | float):
                         print(f"    - {category}: {avg:.1f} (Rank: {player.get('rank')})")
                     else:
                         print(f"    - {category}: {avg} (Rank: {player.get('rank')})")

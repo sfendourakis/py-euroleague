@@ -61,7 +61,6 @@ def get_player_game_logs(
                 player_info = player.get("player", {}).get("person", {})
                 if player_name.upper() in player_info.get("name", "").upper():
                     player_stats = player.get("stats", {})
-                    club = player.get("player", {}).get("club", {})
 
                     # Get opponent name
                     opponent_players = opponent_team.get("players", [])
@@ -82,32 +81,34 @@ def get_player_game_logs(
                         team_score = road_score
                         opp_score = local_score
 
-                    game_logs.append({
-                        "date": game_data.get("date", "")[:10],
-                        "round": game_data.get("round"),
-                        "opponent": opponent_name,
-                        "home_away": "H" if team_key == "local" else "A",
-                        "result": result,
-                        "score": f"{team_score}-{opp_score}",
-                        "minutes": player_stats.get("timePlayed", 0) / 60,
-                        "points": player_stats.get("points", 0),
-                        "fg2m": player_stats.get("fieldGoalsMade2", 0),
-                        "fg2a": player_stats.get("fieldGoalsAttempted2", 0),
-                        "fg3m": player_stats.get("fieldGoalsMade3", 0),
-                        "fg3a": player_stats.get("fieldGoalsAttempted3", 0),
-                        "ftm": player_stats.get("freeThrowsMade", 0),
-                        "fta": player_stats.get("freeThrowsAttempted", 0),
-                        "rebounds": player_stats.get("totalRebounds", 0),
-                        "offensive_reb": player_stats.get("offensiveRebounds", 0),
-                        "defensive_reb": player_stats.get("defensiveRebounds", 0),
-                        "assists": player_stats.get("assistances", 0),
-                        "steals": player_stats.get("steals", 0),
-                        "blocks": player_stats.get("blocksFavour", 0),
-                        "turnovers": player_stats.get("turnovers", 0),
-                        "fouls": player_stats.get("foulsCommited", 0),
-                        "plus_minus": player_stats.get("plusMinus", 0),
-                        "pir": player_stats.get("valuation", 0),
-                    })
+                    game_logs.append(
+                        {
+                            "date": game_data.get("date", "")[:10],
+                            "round": game_data.get("round"),
+                            "opponent": opponent_name,
+                            "home_away": "H" if team_key == "local" else "A",
+                            "result": result,
+                            "score": f"{team_score}-{opp_score}",
+                            "minutes": player_stats.get("timePlayed", 0) / 60,
+                            "points": player_stats.get("points", 0),
+                            "fg2m": player_stats.get("fieldGoalsMade2", 0),
+                            "fg2a": player_stats.get("fieldGoalsAttempted2", 0),
+                            "fg3m": player_stats.get("fieldGoalsMade3", 0),
+                            "fg3a": player_stats.get("fieldGoalsAttempted3", 0),
+                            "ftm": player_stats.get("freeThrowsMade", 0),
+                            "fta": player_stats.get("freeThrowsAttempted", 0),
+                            "rebounds": player_stats.get("totalRebounds", 0),
+                            "offensive_reb": player_stats.get("offensiveRebounds", 0),
+                            "defensive_reb": player_stats.get("defensiveRebounds", 0),
+                            "assists": player_stats.get("assistances", 0),
+                            "steals": player_stats.get("steals", 0),
+                            "blocks": player_stats.get("blocksFavour", 0),
+                            "turnovers": player_stats.get("turnovers", 0),
+                            "fouls": player_stats.get("foulsCommited", 0),
+                            "plus_minus": player_stats.get("plusMinus", 0),
+                            "pir": player_stats.get("valuation", 0),
+                        }
+                    )
 
         if len(game_logs) >= max_games:
             break
@@ -206,8 +207,12 @@ def calculate_averages(game_logs: list[dict]) -> dict:
         "blocks": sum(g["blocks"] for g in game_logs) / n,
         "turnovers": sum(g["turnovers"] for g in game_logs) / n,
         "pir": sum(g["pir"] for g in game_logs) / n,
-        "fg2_pct": sum(g["fg2m"] for g in game_logs) / max(sum(g["fg2a"] for g in game_logs), 1) * 100,
-        "fg3_pct": sum(g["fg3m"] for g in game_logs) / max(sum(g["fg3a"] for g in game_logs), 1) * 100,
+        "fg2_pct": sum(g["fg2m"] for g in game_logs)
+        / max(sum(g["fg2a"] for g in game_logs), 1)
+        * 100,
+        "fg3_pct": sum(g["fg3m"] for g in game_logs)
+        / max(sum(g["fg3a"] for g in game_logs), 1)
+        * 100,
         "ft_pct": sum(g["ftm"] for g in game_logs) / max(sum(g["fta"] for g in game_logs), 1) * 100,
     }
 
