@@ -1,4 +1,4 @@
-.PHONY: help install install-dev test test-cov lint typecheck format clean run-example run-async-example
+.PHONY: help install install-dev test test-cov lint typecheck format clean run-example run-async-example build check-all
 
 help:
 	@echo "py-euroleague development commands"
@@ -17,6 +17,10 @@ help:
 	@echo "Examples:"
 	@echo "  make run-example       Run basic usage example"
 	@echo "  make run-async-example Run async usage example"
+	@echo ""
+	@echo "Release:"
+	@echo "  make build        Build package"
+	@echo "  make check-all    Run all checks (lint, typecheck, test)"
 	@echo ""
 	@echo "Cleanup:"
 	@echo "  make clean        Remove caches"
@@ -48,6 +52,12 @@ run-example: install
 
 run-async-example: install
 	poetry run python examples/async_example.py
+
+build: clean
+	poetry build
+
+check-all: lint typecheck test
+	@echo "All checks passed!"
 
 clean:
 	rm -rf .pytest_cache
