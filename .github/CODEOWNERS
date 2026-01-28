@@ -1,0 +1,20 @@
+# CODEOWNERS - Automatically request reviews from these owners
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+* @sfendourakis
+
+# API endpoints
+/src/euroleague/api/ @sfendourakis
+
+# Core client and HTTP
+/src/euroleague/client.py @sfendourakis
+/src/euroleague/http.py @sfendourakis
+
+# Tests
+/tests/ @sfendourakis
+
+# CI/CD and tooling
+/.github/ @sfendourakis
+/pyproject.toml @sfendourakis
+/Makefile @sfendourakis
