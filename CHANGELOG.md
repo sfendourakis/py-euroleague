@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0] - 2024-01-230
+## [0.2.0] - 2024-01-30
 
 #### Live API - Real-time Game Data
 - **Play-by-Play API** (`client.live.play_by_play`)
