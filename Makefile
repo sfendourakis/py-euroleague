@@ -43,14 +43,14 @@ test-cov: install-dev
 	poetry run pytest --cov=euroleague --cov-report=term-missing
 
 lint: install-dev
-	poetry run ruff check src/ tests/
+	poetry run ruff check src/ tests/ examples/
 
 typecheck: install-dev
 	poetry run mypy src/euroleague
 
 format: install-dev
-	poetry run ruff format src/ tests/
-	poetry run ruff check --fix src/ tests/
+	poetry run ruff format src/ tests/ examples/
+	poetry run ruff check --fix src/ tests/ examples/
 
 run-example: install
 	poetry run python examples/basic_usage.py

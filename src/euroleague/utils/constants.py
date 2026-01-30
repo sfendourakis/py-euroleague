@@ -2,8 +2,9 @@
 
 from enum import Enum
 
-# API Base URL
+# API Base URLs
 BASE_URL = "https://api-live.euroleague.net"
+LIVE_BASE_URL = "https://live.euroleague.net/api"
 
 
 class CompetitionCode(str, Enum):

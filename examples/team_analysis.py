@@ -44,13 +44,7 @@ def display_offensive_rankings(teams: list, top_n: int = 10):
         fg_pct = team.get("twoPointersPercentage", "0%")
         three_pct = team.get("threePointersPercentage", "0%")
 
-        print(
-            f"{i:<6}"
-            f"{name:<35}"
-            f"{team.get('pointsScored', 0):>10.1f}"
-            f"{fg_pct:>10}"
-            f"{three_pct:>10}"
-        )
+        print(f"{i:<6}{name:<35}{team.get('pointsScored', 0):>10.1f}{fg_pct:>10}{three_pct:>10}")
 
 
 def display_defensive_rankings(teams: list, top_n: int = 10):
