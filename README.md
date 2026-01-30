@@ -117,6 +117,65 @@ with EuroleagueClient() as client:
         print(f"  {name}: {pts} PTS, {reb} REB, {ast} AST")
 ```
 
+## Live Game Data
+
+Access real-time game data including play-by-play events and shot locations with coordinates.
+
+### Play-by-Play
+
+Get detailed play-by-play data for any game:
+
+```python
+with EuroleagueClient() as client:
+    # Get play-by-play for a game
+    pbp = client.live.play_by_play.get("E2025", game_code=241)
+
+    print(f"{pbp.team_a} vs {pbp.team_b}")
+    print(f"Total plays: {pbp.total_plays}")
+
+    # Get plays by quarter
+    for q in range(1, 5):
+        quarter_plays = pbp.get_quarter(q)
+        print(f"Q{q}: {len(quarter_plays)} plays")
+
+    # Filter scoring plays
+    for play in pbp.get_scoring_plays()[:10]:
+        print(f"{play.marker_time} - {play.player}: {play.play_info} ({play.points_scored} pts)")
+
+    # Get plays by team or player
+    team_plays = pbp.get_plays_by_team("MAD")
+    player_plays = pbp.get_plays_by_player("P001")
+```
+
+### Shot Location Data
+
+Get shot data with court coordinates for shot chart analysis:
+
+```python
+with EuroleagueClient() as client:
+    # Get shot data for a game
+    shots = client.live.shots.get("E2025", game_code=241)
+
+    print(f"Total shots: {shots.total_shots}")
+    print(f"FG%: {shots.get_field_goal_percentage():.1f}%")
+    print(f"3PT%: {shots.get_three_point_percentage():.1f}%")
+
+    # Get shots with coordinates for visualization
+    for shot in shots.field_goals:
+        if shot.has_coordinates:
+            status = "Made" if shot.is_made else "Missed"
+            print(f"{shot.player}: {status} at ({shot.coord_x}, {shot.coord_y})")
+
+    # Filter by team, player, or zone
+    team_shots = shots.get_shots_by_team("MAD")
+    player_shots = shots.get_shots_by_player("P001")
+    paint_shots = shots.get_shots_by_zone("C")
+
+    # Analyze special situations
+    fastbreak_shots = [s for s in shots.field_goals if s.fastbreak]
+    second_chance = [s for s in shots.field_goals if s.second_chance]
+```
+
 ### Standings & Rankings
 
 ```python
@@ -154,13 +213,14 @@ asyncio.run(analyze_season())
 
 ## API Versions
 
-The Euroleague API has three versions, each with different focuses:
+The Euroleague API has multiple versions and endpoints:
 
 | Version | Focus | Best For |
 |---------|-------|----------|
 | **V1** | Legacy/Simple | Basic box scores, standings |
 | **V2** | Comprehensive | Clubs, games, people, seasons |
 | **V3** | Statistics | Player/team stats, analytics |
+| **Live** | Real-time | Play-by-play, shot locations |
 
 ### V1 Endpoints
 - `client.v1.standings` - League standings
@@ -181,6 +241,10 @@ The Euroleague API has three versions, each with different focuses:
 - `client.v3.standings` - Basic, streaks, margins, calendar views
 - `client.v3.stats` - Game stats, team comparisons
 
+### Live Endpoints (Real-time Game Data)
+- `client.live.play_by_play` - Play-by-play events with timestamps
+- `client.live.shots` - Shot locations with court coordinates
+
 ## Competition Codes
 
 - `E` - EuroLeague
@@ -197,6 +261,8 @@ See the [examples/](examples/) directory for complete working examples:
 - **player_game_logs.py** - Game-by-game player statistics
 - **fantasy_basketball.py** - Fantasy basketball analysis
 - **async_example.py** - Async client usage
+- **play_by_play_analysis.py** - Play-by-play data analysis
+- **shot_chart_analysis.py** - Shot location data with coordinates
 
 ## Error Handling
 
