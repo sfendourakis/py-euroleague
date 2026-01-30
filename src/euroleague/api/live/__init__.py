@@ -1,5 +1,7 @@
 """Live API namespace for real-time Euroleague data."""
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from euroleague.api.live.play_by_play import PlayByPlayAPI
