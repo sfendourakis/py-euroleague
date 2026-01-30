@@ -182,7 +182,7 @@ def display_fantasy_roster(roster: dict):
     print(f"\n{'=' * 40}")
     print(f"Roster spots filled: {filled_spots}/8")
     print(f"Total projected PIR: {total_pir:.1f}")
-    print(f"Average PIR per player: {total_pir/filled_spots:.1f}" if filled_spots > 0 else "")
+    print(f"Average PIR per player: {total_pir / filled_spots:.1f}" if filled_spots > 0 else "")
 
 
 def weekly_hot_picks(leaders: dict, top_n: int = 5):

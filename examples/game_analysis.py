@@ -41,13 +41,7 @@ def display_game_schedule(games: list, title: str = "Recent Games"):
         game_date = game.get("date", "TBD")[:10]
         round_num = game.get("round", "")
 
-        print(
-            f"{round_num:<8}"
-            f"{game_date:<12}"
-            f"{home_name:<25}"
-            f"{score:^15}"
-            f"{away_name:<25}"
-        )
+        print(f"{round_num:<8}{game_date:<12}{home_name:<25}{score:^15}{away_name:<25}")
 
 
 def get_game_stats(client: EuroleagueClient, season_code: str, game_code: int) -> dict:

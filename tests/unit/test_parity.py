@@ -108,9 +108,9 @@ class TestSyncAsyncParity:
             if expected_async not in async_methods:
                 missing_async.append(sync_method)
 
-        assert (
-            not missing_async
-        ), f"{api_class.__name__} is missing async versions for: {missing_async}"
+        assert not missing_async, (
+            f"{api_class.__name__} is missing async versions for: {missing_async}"
+        )
 
     @pytest.mark.parametrize("api_class", ALL_API_CLASSES)
     def test_async_methods_have_matching_signatures(self, api_class: type) -> None:

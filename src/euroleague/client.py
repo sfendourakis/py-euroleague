@@ -2,11 +2,12 @@
 
 from typing import Any
 
+from euroleague.api.live import LiveAPI
 from euroleague.api.v1 import V1API
 from euroleague.api.v2 import V2API
 from euroleague.api.v3 import V3API
 from euroleague.http import AsyncHTTPClient, HTTPClient
-from euroleague.utils.constants import BASE_URL
+from euroleague.utils.constants import BASE_URL, LIVE_BASE_URL
 
 
 class EuroleagueClient:
@@ -40,11 +41,17 @@ class EuroleagueClient:
             timeout=timeout,
             max_retries=max_retries,
         )
+        self._live_http = HTTPClient(
+            base_url=LIVE_BASE_URL,
+            timeout=timeout,
+            max_retries=max_retries,
+        )
 
         # Initialize API version namespaces
         self._v1 = V1API(self._http)
         self._v2 = V2API(self._http)
         self._v3 = V3API(self._http)
+        self._live = LiveAPI(self._live_http)
 
     @property
     def v1(self) -> V1API:
@@ -61,9 +68,15 @@ class EuroleagueClient:
         """Access V3 API endpoints (statistics-focused)."""
         return self._v3
 
+    @property
+    def live(self) -> LiveAPI:
+        """Access Live API endpoints (play-by-play, real-time data)."""
+        return self._live
+
     def close(self) -> None:
-        """Close the HTTP client and release resources."""
+        """Close the HTTP clients and release resources."""
         self._http.close()
+        self._live_http.close()
 
     def __enter__(self) -> "EuroleagueClient":
         """Enter context manager."""
@@ -117,11 +130,17 @@ class AsyncEuroleagueClient:
             timeout=timeout,
             max_retries=max_retries,
         )
+        self._live_http = AsyncHTTPClient(
+            base_url=LIVE_BASE_URL,
+            timeout=timeout,
+            max_retries=max_retries,
+        )
 
         # Initialize API version namespaces
         self._v1 = V1API(self._http)
         self._v2 = V2API(self._http)
         self._v3 = V3API(self._http)
+        self._live = LiveAPI(self._live_http)
 
     @property
     def v1(self) -> V1API:
@@ -138,9 +157,15 @@ class AsyncEuroleagueClient:
         """Access V3 API endpoints (statistics-focused)."""
         return self._v3
 
+    @property
+    def live(self) -> LiveAPI:
+        """Access Live API endpoints (play-by-play, real-time data)."""
+        return self._live
+
     async def close(self) -> None:
-        """Close the HTTP client and release resources."""
+        """Close the HTTP clients and release resources."""
         await self._http.close()
+        await self._live_http.close()
 
     async def __aenter__(self) -> "AsyncEuroleagueClient":
         """Enter async context manager."""
